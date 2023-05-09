@@ -1,15 +1,13 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
 
 public class Myprogram {
-   
-    public static void main(String[] args) {
-    	String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb";
-
-    	JLabel logo = new JLabel(); //JLabel Creation
+	
+	Myprogram(){
+		JLabel logo = new JLabel(); //JLabel Creation
         logo.setIcon(new ImageIcon("C:/Users/wyina/Downloads/logo.jpg")); //Sets the image to be displayed as an icon
         logo.setSize(50, 50);
         logo.setBounds(10, 25, 74, 50); //Sets the location of the image
@@ -141,29 +139,24 @@ public class Myprogram {
     	
     	
     	JButton AddOrderButton = new JButton("Add Order");
-    	AddOrderButton.setBounds(1210, 720, 260,55);
-    	// sa confirm button eme
-        try {
-            Connection connection = DriverManager.getConnection(databaseURL);
-            System.out.println("Connected to MS Access database");
-            
-            //samples variable
-            int var_customer = 10001;
-            
-            PreparedStatement sql = connection.prepareStatement("INSERT INTO Customer(CustomerID) VALUES("+var_customer+")");
-           
-            PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
-                    + "("+var_customer+", 1002, 2, 100)");
-            
-            sql.executeUpdate();
-            sql2.executeUpdate();
-            
-            connection.close();
-        } catch(SQLException e){
-            e.printStackTrace();
-        }
+    	AddOrderButton.setBounds(1210, 720, 130,55);
     	
-        
+    	AddOrderButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+    	});
+    	
+    	JButton PayOrder = new JButton("Pay Order");
+    	PayOrder.setBounds(1350, 720, 130,55);
+    	
+    	PayOrder.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				ReceiptWindow window = new ReceiptWindow();
+			}
+    	});
+    	
+    	
     	ImageIcon iconA = new ImageIcon("C:/Users/wyina/Downloads/egg salad.jpg");
     	ImageIcon iconB = new ImageIcon("C:/Users/wyina/Downloads/salmon balls (1).jpg");
     	ImageIcon iconC = new ImageIcon("C:/Users/wyina/Downloads/Dynamite-Cheese-Sticks-2-1200x900 (1).jpg");
@@ -251,6 +244,7 @@ public class Myprogram {
         frame.add(DessertButton);
         frame.add(DrinksButton);
         frame.add(AddOrderButton);
+        frame.add(PayOrder);
         frame.add(AmountSpinner);
         frame.add(QuantityLabel);
         frame.add(CustomerLabel);
@@ -292,8 +286,16 @@ public class Myprogram {
         FoodPanel5.add(Drinks3);
         FoodPanel5.add(Drinks4);
         
+	}
+   
+    
+    public static void main(String[] args) {
+    	
+    	new Myprogram();
+    	
+    	
+    	
         
      
     }
 }
-
