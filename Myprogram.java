@@ -8,6 +8,7 @@ import java.util.*;
 public class Myprogram {
         // temp list for menu
         public static String value = "";
+        public static int price = 0;
         public static String[] food_array = {"Egg Salad", "Salmon Balls", "Dynamite Cheese", "Tempura", 
                                             "Beef Steak", "Whole Chicken", "Bulalo", "Fish",
                                             "Spaghetti", "Pesto", "French Fries", "Burger",
@@ -71,10 +72,20 @@ public class Myprogram {
             logo.setBounds(10, 25, 74, 50); //Sets the location of the image
             
             JLabel restaurantName = new JLabel();// create restaurant name text
-            restaurantName.setText(value);
-            restaurantName.setBounds(0, 0 , 500, 25);
+            restaurantName.setText("ROUTE 66");
+            restaurantName.setBounds(5, 0 , 500, 25);
             restaurantName.setFont(new Font("Verdana", Font.BOLD, 25));
-    	
+            
+            JLabel itemName = new JLabel();
+            itemName.setText("Item: " + value);
+            itemName.setBounds(5, 705, 500, 25);
+            itemName.setFont(new Font("Verdana", Font.BOLD, 25));
+            
+            JLabel itemPrice = new JLabel();
+            itemPrice.setText("Price: " + value);
+            itemPrice.setBounds(5, 735, 500, 25);
+            itemPrice.setFont(new Font("Verdana", Font.BOLD, 25));
+            
             JLabel CustomerLabel = new JLabel();// create restaurant name text
             CustomerLabel.setText("CUSTOMER NO." + customer_number);
             CustomerLabel.setBounds(500, 0 , 500,100);
@@ -247,29 +258,75 @@ public class Myprogram {
             JButton Appetizer1 = new JButton(" ", iconA);
             Appetizer1.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    value = "Egg Salad";}
+                    value = food_array[0];
+                    price = price_array[0];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
                 });
             JButton Appetizer2 = new JButton(" ", iconB);
             Appetizer2.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    value = "Salmon Balls";}
+                    value = food_array[1];
+                    price = price_array[1];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
                 });
             JButton Appetizer3 = new JButton(" ", iconC);
-            Appetizer2.addActionListener(new ActionListener(){
+            Appetizer3.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    value = "Salmon Balls";}
+                    value = food_array[2];
+                    price = price_array[2];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
                 });
             JButton Appetizer4 = new JButton(" ", iconD);
-
+            Appetizer4.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[3];
+                    price = price_array[3];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             ImageIcon iconE = new ImageIcon("C:/Users/wyina/Downloads/beefsteak.jpg");
             ImageIcon iconF = new ImageIcon("C:/Users/wyina/Downloads/whole-chicken_cooked (1).jpg");
             ImageIcon iconG = new ImageIcon("C:/Users/wyina/Downloads/lutong-pinoy-bulalo-1200x900 (1).jpg");
             ImageIcon iconH = new ImageIcon("C:/Users/wyina/Downloads/cb987cf56e9f1240460a65ef8dd125f1 (1).jpg");
 
             JButton Meal1 = new JButton(" ", iconE);
+            Meal1.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[4];
+                    price = price_array[4];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
             JButton Meal2 = new JButton(" ", iconF);
+            Meal2.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[5];
+                    price = price_array[5];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Meal3 = new JButton(" ", iconG);
+            Meal3.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[6];
+                    price = price_array[6];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Meal4 = new JButton(" ", iconH);
+            Meal4.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[7];
+                    price = price_array[7];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
 
             ImageIcon iconI = new ImageIcon("C:/Users/wyina/Downloads/Spaghetti-with-Meat-Sauce-Recipe-Video (1).jpg");
             ImageIcon iconJ = new ImageIcon("C:/Users/wyina/Downloads/Goat-cheese-pesto-linguine-pasta (1).jpg");
@@ -277,9 +334,41 @@ public class Myprogram {
             ImageIcon iconL = new ImageIcon("C:/Users/wyina/Downloads/gp4k2jro_burgers_625x300_20_June_22 (1).jpg");
 
             JButton SideDish1 = new JButton(" ", iconI);
+            SideDish1.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[8];
+                    price = price_array[8];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton SideDish2 = new JButton(" ", iconJ);
+            SideDish2.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[9];
+                    price = price_array[9];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton SideDish3 = new JButton(" ", iconK);
+            SideDish3.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[10];
+                    price = price_array[10];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton SideDish4 = new JButton(" ", iconL);
+            SideDish4.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[11];
+                    price = price_array[11];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
 
             ImageIcon iconM = new ImageIcon("C:/Users/wyina/Downloads/cakeb (1).jpg");
             ImageIcon iconN = new ImageIcon("C:/Users/wyina/Downloads/chocolate-cupcakes- (1).jpg");
@@ -287,9 +376,40 @@ public class Myprogram {
             ImageIcon iconP = new ImageIcon("C:/Users/wyina/Downloads/cookies6 (1).jpg");
 
             JButton Dessert1 = new JButton(" ", iconM);
+            Dessert1.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[12];
+                    price = price_array[12];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Dessert2 = new JButton(" ", iconN);
+            Dessert2.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[13];
+                    price = price_array[13];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Dessert3 = new JButton(" ", iconO);
+            Dessert3.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[14];
+                    price = price_array[14];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Dessert4 = new JButton(" ", iconP);
+            Dessert4.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[15];
+                    price = price_array[15];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
 
 
             ImageIcon iconQ = new ImageIcon("C:/Users/wyina/Downloads/beer (1).jpg");
@@ -298,9 +418,41 @@ public class Myprogram {
             ImageIcon iconT = new ImageIcon("C:/Users/wyina/Downloads/frappe (1).jpg");
 
             JButton Drinks1 = new JButton(" ", iconQ);
+            Drinks1.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[16];
+                    price = price_array[16];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Drinks2 = new JButton(" ", iconR);
+            Drinks2.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[17];
+                    price = price_array[17];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Drinks3 = new JButton(" ", iconS);
+            Drinks3.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[18];
+                    price = price_array[18];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
             JButton Drinks4 = new JButton(" ", iconT);
+            Drinks4.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    value = food_array[19];
+                    price = price_array[19];
+                    itemName.setText("Item: " + value);
+                    itemPrice.setText("Price: " + price);}
+                });
+            
 
             JSpinner AmountSpinner = new JSpinner();
             AmountSpinner.setBounds(1100,720,100,55);
@@ -335,6 +487,8 @@ public class Myprogram {
             frame.add(QuantityLabel);
             frame.add(CustomerLabel);
             frame.add(restaurantName);
+            frame.add(itemName);
+            frame.add(itemPrice);
             frame.add(logo);
         
             frame.add(UpperPanel, BorderLayout.NORTH);
