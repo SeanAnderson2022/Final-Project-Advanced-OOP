@@ -9,6 +9,7 @@ public class Myprogram {
         // temp list for menu
         public static String value = "";
         public static int price = 0;
+        public static int id = 0;
         public static String[] food_array = {"Egg Salad", "Salmon Balls", "Dynamite Cheese", "Tempura", 
                                             "Beef Steak", "Whole Chicken", "Bulalo", "Fish",
                                             "Spaghetti", "Pesto", "French Fries", "Burger",
@@ -19,6 +20,8 @@ public class Myprogram {
                                           70, 115, 60, 90,
                                           60, 45, 60, 50,
                                           40, 50, 25, 65};
+        public static int[] product_id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                                       11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
         static int search(String[] food_array, String value){	
                 int i;
                 for (i = 0; i < 8; i++)
@@ -32,11 +35,11 @@ public class Myprogram {
         }
         
         // for qty
-        public static ArrayList<Integer> quantity_array = new ArrayList<Integer>();
+        public static ArrayList<Integer> quantity_order = new ArrayList<Integer>();
         // for order eme
         public static ArrayList<String> food_order = new ArrayList<String>();
         public static ArrayList<Integer> total_price_order = new ArrayList<Integer>();
-        
+        public static ArrayList<Integer> food_id = new ArrayList<Integer>();
         public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
         public static int customer_number;
         public static void get_rows(){
@@ -65,6 +68,10 @@ public class Myprogram {
         }                
 	public Myprogram(){
             
+            
+            food_order.clear();
+            quantity_order.clear();
+            total_price_order.clear();
             get_rows();
             JLabel logo = new JLabel(); //JLabel Creation
             logo.setIcon(new ImageIcon("C:/Users/wyina/Downloads/logo.jpg")); //Sets the image to be displayed as an icon
@@ -78,16 +85,16 @@ public class Myprogram {
             
             JLabel itemName = new JLabel();
             itemName.setText("Item: " + value);
-            itemName.setBounds(5, 705, 500, 25);
-            itemName.setFont(new Font("Verdana", Font.BOLD, 25));
+            itemName.setBounds(5, 705, 500, 27);
+            itemName.setFont(new Font("Verdana", Font.BOLD, 24));
             
             JLabel itemPrice = new JLabel();
             itemPrice.setText("Price: " + value);
-            itemPrice.setBounds(5, 735, 500, 25);
-            itemPrice.setFont(new Font("Verdana", Font.BOLD, 25));
+            itemPrice.setBounds(5, 735, 500, 27);
+            itemPrice.setFont(new Font("Verdana", Font.BOLD, 24));
             
             JLabel CustomerLabel = new JLabel();// create restaurant name text
-            CustomerLabel.setText("CUSTOMER NO." + customer_number);
+            CustomerLabel.setText("CUSTOMER NO. " + customer_number);
             CustomerLabel.setBounds(500, 0 , 500,100);
             CustomerLabel.setFont(new Font("Verdana", Font.BOLD, 45));
 
@@ -203,14 +210,22 @@ public class Myprogram {
 
                 }
             });
-    	
-    	
+            SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0,0,100,1);
+            JSpinner AmountSpinner = new JSpinner(spinnerModel);
+            AmountSpinner.setBounds(1100,720,100,55);
+            
             JButton AddOrderButton = new JButton("Add Order");
             AddOrderButton.setBounds(1210, 720, 130,55);
 
             AddOrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-
+                    int selectedValue = (int) AmountSpinner.getValue();
+                    if (selectedValue > 0) {
+                        food_order.add(value);
+                        food_id.add(id);
+                        quantity_order.add(selectedValue);
+                        total_price_order.add(selectedValue *price);}
+                        
                 }
             });
     	
@@ -227,13 +242,21 @@ public class Myprogram {
         
                         //samples variable
                         PreparedStatement sql = connection.prepareStatement("INSERT INTO Customer(CustomerID) VALUES("+customer_number+")");
-        
-                        PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
-                                + "("+customer_number+", 1002, 2, 100)");
-        
                         sql.executeUpdate();
-                        sql2.executeUpdate();
-                        
+                        int current = customer_number;
+                        int length = food_order.size();
+                        /* debugging
+                        System.out.println(length);
+                        System.out.println(food_order);
+                        System.out.println(food_id);
+                        System.out.println(quantity_order);
+                        System.out.println(total_price_order);*/
+                        for(int i = 0; i < length; i++){
+                        //product_ID = food_order.get(i);
+                            PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
+                                +"("+current+", "+food_id.get(i)+", "+quantity_order.get(i)+", "+total_price_order.get(i)+")");
+                            sql2.executeUpdate();
+                        }
                         connection.close();
                     } catch(SQLException err){
                         err.printStackTrace();
@@ -260,32 +283,36 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[0];
                     price = price_array[0];
+                    id = product_id[0];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             JButton Appetizer2 = new JButton(" ", iconB);
             Appetizer2.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[1];
                     price = price_array[1];
+                    id = product_id[1];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             JButton Appetizer3 = new JButton(" ", iconC);
             Appetizer3.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[2];
                     price = price_array[2];
+                    id = product_id[2];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             JButton Appetizer4 = new JButton(" ", iconD);
             Appetizer4.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[3];
                     price = price_array[3];
+                    id = product_id[3];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             ImageIcon iconE = new ImageIcon("C:/Users/wyina/Downloads/beefsteak.jpg");
@@ -298,16 +325,18 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[4];
                     price = price_array[4];
+                    id = product_id[4];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             JButton Meal2 = new JButton(" ", iconF);
             Meal2.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[5];
                     price = price_array[5];
+                    id = product_id[5];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton Meal3 = new JButton(" ", iconG);
@@ -315,8 +344,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[6];
                     price = price_array[6];
+                    id = product_id[6];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
             JButton Meal4 = new JButton(" ", iconH);
@@ -324,8 +354,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[7];
                     price = price_array[7];
+                    id = product_id[7];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
 
             ImageIcon iconI = new ImageIcon("C:/Users/wyina/Downloads/Spaghetti-with-Meat-Sauce-Recipe-Video (1).jpg");
@@ -338,8 +369,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[8];
                     price = price_array[8];
+                    id = product_id[8];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton SideDish2 = new JButton(" ", iconJ);
@@ -347,8 +379,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[9];
                     price = price_array[9];
+                    id = product_id[9];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
             JButton SideDish3 = new JButton(" ", iconK);
@@ -356,8 +389,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[10];
                     price = price_array[10];
+                    id = product_id[10];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton SideDish4 = new JButton(" ", iconL);
@@ -365,8 +399,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[11];
                     price = price_array[11];
+                    id = product_id[11];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
 
@@ -380,8 +415,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[12];
                     price = price_array[12];
+                    id = product_id[12];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton Dessert2 = new JButton(" ", iconN);
@@ -389,8 +425,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[13];
                     price = price_array[13];
+                    id = product_id[13];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton Dessert3 = new JButton(" ", iconO);
@@ -398,8 +435,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[14];
                     price = price_array[14];
+                    id = product_id[14];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton Dessert4 = new JButton(" ", iconP);
@@ -407,8 +445,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[15];
                     price = price_array[15];
+                    id = product_id[15];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
 
 
@@ -422,8 +461,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[16];
                     price = price_array[16];
+                    id = product_id[16];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
             JButton Drinks2 = new JButton(" ", iconR);
@@ -431,8 +471,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[17];
                     price = price_array[17];
+                    id = product_id[17];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
             JButton Drinks3 = new JButton(" ", iconS);
@@ -440,8 +481,9 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[18];
                     price = price_array[18];
+                    id = product_id[18];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price + " php");}
                 });
             
             JButton Drinks4 = new JButton(" ", iconT);
@@ -449,13 +491,13 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[19];
                     price = price_array[19];
+                    id = product_id[19];
                     itemName.setText("Item: " + value);
-                    itemPrice.setText("Price: " + price);}
+                    itemPrice.setText("Price: " + price+ " php");}
                 });
             
 
-            JSpinner AmountSpinner = new JSpinner();
-            AmountSpinner.setBounds(1100,720,100,55);
+            
 
             JPanel UpperPanel = new JPanel();
             UpperPanel.setBackground(Color.CYAN);
