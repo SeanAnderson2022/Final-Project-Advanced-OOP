@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Myprogram {
         // temp list for menu
@@ -67,12 +68,11 @@ public class Myprogram {
             }
         }                
 	public Myprogram(){
-            
-            
             food_order.clear();
             quantity_order.clear();
             total_price_order.clear();
             get_rows();
+            
             JLabel logo = new JLabel(); //JLabel Creation
             logo.setIcon(new ImageIcon("C:/Users/wyina/Downloads/logo.jpg")); //Sets the image to be displayed as an icon
             logo.setSize(50, 50);
@@ -84,14 +84,14 @@ public class Myprogram {
             restaurantName.setFont(new Font("Verdana", Font.BOLD, 25));
             
             JLabel itemName = new JLabel();
-            itemName.setText("Item: " + value);
-            itemName.setBounds(5, 705, 500, 27);
-            itemName.setFont(new Font("Verdana", Font.BOLD, 24));
+            itemName.setText("ITEM: " + value);
+            itemName.setBounds(15, 710, 500, 29);
+            itemName.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 24));
             
             JLabel itemPrice = new JLabel();
-            itemPrice.setText("Price: " + value);
-            itemPrice.setBounds(5, 735, 500, 27);
-            itemPrice.setFont(new Font("Verdana", Font.BOLD, 24));
+            itemPrice.setText("PRICE: " + value);
+            itemPrice.setBounds(15, 745, 500, 27);
+            itemPrice.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 22));
             
             JLabel CustomerLabel = new JLabel();// create restaurant name text
             CustomerLabel.setText("CUSTOMER NO. " + customer_number);
@@ -99,53 +99,94 @@ public class Myprogram {
             CustomerLabel.setFont(new Font("Verdana", Font.BOLD, 45));
 
             JLabel QuantityLabel = new JLabel();// create restaurant name text
-            QuantityLabel.setText("Quantity");
-            QuantityLabel.setBounds(950, 700 , 500,100);
-            QuantityLabel.setFont(new Font("Verdana", Font.BOLD, 25));
+            QuantityLabel.setText("QUANTITY");
+            QuantityLabel.setBounds(990, 700 , 500,100);
+            QuantityLabel.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 18));
 
-            Color color = new Color(245,245,245);
+            // coloring shit
+            Color food_padding = new Color(251, 246, 240);
+            Color back = new Color(174, 230, 230);
+            Color center_background = new Color(255, 255, 255);
+            Color back_button_color = new Color(230, 230, 230);
 
-
+            
             JPanel FoodPanel1 = new JPanel();
             FoodPanel1.setLayout(new GridLayout(2,2,20,20));
             FoodPanel1.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
-            FoodPanel1.setBackground(color);
+            FoodPanel1.setBackground(food_padding);
             FoodPanel1.setPreferredSize(new Dimension(1000,500));
 
             JPanel FoodPanel2 = new JPanel();
             FoodPanel2.setLayout(new GridLayout(2,2,20,20));
             FoodPanel2.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
-            FoodPanel2.setBackground(color);
+            FoodPanel2.setBackground(food_padding);
             FoodPanel2.setPreferredSize(new Dimension(1000,500));
             FoodPanel2.setVisible(false);
 
             JPanel FoodPanel3 = new JPanel();
             FoodPanel3.setLayout(new GridLayout(2,2,20,20));
             FoodPanel3.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
-            FoodPanel3.setBackground(color);
+            FoodPanel3.setBackground(food_padding);
             FoodPanel3.setPreferredSize(new Dimension(1000,500));
             FoodPanel3.setVisible(false);
 
             JPanel FoodPanel4 = new JPanel();
             FoodPanel4.setLayout(new GridLayout(2,2,20,20));
             FoodPanel4.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
-            FoodPanel4.setBackground(color);
+            FoodPanel4.setBackground(food_padding);
             FoodPanel4.setPreferredSize(new Dimension(1000,500));
             FoodPanel4.setVisible(false);
 
             JPanel FoodPanel5 = new JPanel();
             FoodPanel5.setLayout(new GridLayout(2,2,20,20));
             FoodPanel5.setBorder(BorderFactory.createEmptyBorder(50,50,50,50));
-            FoodPanel5.setBackground(color);
+            FoodPanel5.setBackground(food_padding);
             FoodPanel5.setPreferredSize(new Dimension(1000,500));
             FoodPanel5.setVisible(false);
     	
-            JButton AppetizerButton = new JButton("Appetizer");
-            AppetizerButton.setBounds(50, 100, 240,75);
-            AppetizerButton.setFont(new Font("Verdana", Font.BOLD, 20));
-
+            JButton AppetizerButton = new JButton("APPETIZER");
+            AppetizerButton.setBounds(50, 115, 240,60);
+            AppetizerButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
+            AppetizerButton.setBackground(center_background);
+            AppetizerButton.setBorder(BorderFactory.createEtchedBorder());
+            AppetizerButton.setBorder(BorderFactory.createEmptyBorder());
+            
+            JButton MealButton = new JButton("MEAL");
+            MealButton.setBounds(340, 115, 240,60);
+            MealButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
+            MealButton.setBackground(back_button_color);
+            MealButton.setBorder(BorderFactory.createEtchedBorder());
+            MealButton.setBorder(BorderFactory.createEmptyBorder());
+            
+            JButton SideDishButton = new JButton("SIDE DISH");
+            SideDishButton.setBounds(630, 115, 240,60);
+            SideDishButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
+            SideDishButton.setBackground(back_button_color);
+            SideDishButton.setBorder(BorderFactory.createEtchedBorder());
+            SideDishButton.setBorder(BorderFactory.createEmptyBorder());
+            
+            JButton DessertButton = new JButton("DESSERT");
+            DessertButton.setBounds(920, 115, 240,60);
+            DessertButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
+            DessertButton.setBackground(back_button_color);
+            DessertButton.setBorder(BorderFactory.createEtchedBorder());
+            DessertButton.setBorder(BorderFactory.createEmptyBorder());
+            
+            JButton DrinksButton = new JButton("DRINKS");
+            DrinksButton.setBounds(1210, 115, 240,60);
+            DrinksButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
+            DrinksButton.setBackground(back_button_color);
+            DrinksButton.setBorder(BorderFactory.createEtchedBorder());
+            DrinksButton.setBorder(BorderFactory.createEmptyBorder());
+            
             AppetizerButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                        AppetizerButton.setBackground(center_background);
+                        MealButton.setBackground(back_button_color);
+                        SideDishButton.setBackground(back_button_color);
+                        DessertButton.setBackground(back_button_color);
+                        DrinksButton.setBackground(back_button_color);
+                                
                         FoodPanel2.setVisible(false);
                         FoodPanel3.setVisible(false);
                         FoodPanel4.setVisible(false);
@@ -153,13 +194,14 @@ public class Myprogram {
                         FoodPanel1.setVisible(true);
                 }
             });
-    	
-            JButton MealButton = new JButton("Meal");
-            MealButton.setBounds(340, 100, 240,75);
-            MealButton.setFont(new Font("Verdana", Font.BOLD, 20));
-    	
+           
             MealButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                        AppetizerButton.setBackground(back_button_color);
+                        MealButton.setBackground(center_background);
+                        SideDishButton.setBackground(back_button_color);
+                        DessertButton.setBackground(back_button_color);
+                        DrinksButton.setBackground(back_button_color);
                         FoodPanel1.setVisible(false);
                         FoodPanel3.setVisible(false);
                         FoodPanel4.setVisible(false);
@@ -167,13 +209,14 @@ public class Myprogram {
                         FoodPanel2.setVisible(true);
                 }
             });
-    	
-            JButton SideDishButton = new JButton("Side Dish");
-            SideDishButton.setBounds(630, 100, 240,75);
-            SideDishButton.setFont(new Font("Verdana", Font.BOLD, 20));
-    	
+
             SideDishButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                        AppetizerButton.setBackground(back_button_color);
+                        MealButton.setBackground(back_button_color);
+                        SideDishButton.setBackground(center_background);
+                        DessertButton.setBackground(back_button_color);
+                        DrinksButton.setBackground(back_button_color);
                         FoodPanel1.setVisible(false);
                         FoodPanel2.setVisible(false);
                         FoodPanel4.setVisible(false);
@@ -181,13 +224,14 @@ public class Myprogram {
                         FoodPanel3.setVisible(true);
                 }
             });
-    	
-            JButton DessertButton = new JButton("Dessert");
-            DessertButton.setBounds(920, 100, 240,75);
-            DessertButton.setFont(new Font("Verdana", Font.BOLD, 20));
-    	
+
             DessertButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                        AppetizerButton.setBackground(back_button_color);
+                        MealButton.setBackground(back_button_color);
+                        SideDishButton.setBackground(back_button_color);
+                        DessertButton.setBackground(center_background);
+                        DrinksButton.setBackground(back_button_color);
                         FoodPanel1.setVisible(false);
                         FoodPanel2.setVisible(false);
                         FoodPanel3.setVisible(false);
@@ -195,13 +239,14 @@ public class Myprogram {
                         FoodPanel4.setVisible(true);
                 }
             });
-    	
-            JButton DrinksButton = new JButton("Drinks");
-            DrinksButton.setBounds(1210, 100, 240,75);
-            DrinksButton.setFont(new Font("Verdana", Font.BOLD, 20));
 
             DrinksButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                        AppetizerButton.setBackground(back_button_color);
+                        MealButton.setBackground(back_button_color);
+                        SideDishButton.setBackground(back_button_color);
+                        DessertButton.setBackground(back_button_color);
+                        DrinksButton.setBackground(center_background);
                         FoodPanel1.setVisible(false);
                         FoodPanel2.setVisible(false);
                         FoodPanel3.setVisible(false);
@@ -214,9 +259,28 @@ public class Myprogram {
             JSpinner AmountSpinner = new JSpinner(spinnerModel);
             AmountSpinner.setBounds(1100,720,100,55);
             
-            JButton AddOrderButton = new JButton("Add Order");
+            Color orange_button = new Color(255, 220, 175);
+            
+            JButton AddOrderButton = new JButton("ADD ORDER");
             AddOrderButton.setBounds(1210, 720, 130,55);
-
+            AddOrderButton.setEnabled(false);
+            AddOrderButton.setBackground(orange_button);
+            AddOrderButton.setBorder(BorderFactory.createEtchedBorder());
+            //AddOrderButton.setBorder(BorderFactory.createEmptyBorder());
+            
+            JButton PayOrder = new JButton("PAY ORDER");
+            PayOrder.setBounds(1350, 720, 130,55);
+            PayOrder.setEnabled(false);
+            PayOrder.setBackground(orange_button);
+            PayOrder.setBorder(BorderFactory.createEtchedBorder());
+            
+            AmountSpinner.addChangeListener(new ChangeListener() {      
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                  AddOrderButton.setEnabled(true);
+                }
+            });
+            
             AddOrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     int selectedValue = (int) AmountSpinner.getValue();
@@ -225,34 +289,23 @@ public class Myprogram {
                         food_id.add(id);
                         quantity_order.add(selectedValue);
                         total_price_order.add(selectedValue *price);}
-                        
+                        PayOrder.setEnabled(true);
                 }
             });
     	
-            JButton PayOrder = new JButton("Pay Order");
-            PayOrder.setBounds(1350, 720, 130,55);
-
             PayOrder.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    // sa confirm button eme
                     try {
                         Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                         Connection connection = DriverManager.getConnection(databaseURL);
                         System.out.println("Connected to MS Access database");
-        
-                        //samples variable
+
                         PreparedStatement sql = connection.prepareStatement("INSERT INTO Customer(CustomerID) VALUES("+customer_number+")");
                         sql.executeUpdate();
                         int current = customer_number;
                         int length = food_order.size();
-                        /* debugging
-                        System.out.println(length);
-                        System.out.println(food_order);
-                        System.out.println(food_id);
-                        System.out.println(quantity_order);
-                        System.out.println(total_price_order);*/
+    
                         for(int i = 0; i < length; i++){
-                        //product_ID = food_order.get(i);
                             PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
                                 +"("+current+", "+food_id.get(i)+", "+quantity_order.get(i)+", "+total_price_order.get(i)+")");
                             sql2.executeUpdate();
@@ -263,7 +316,6 @@ public class Myprogram {
                     } catch(ClassNotFoundException err){
                         err.printStackTrace();
                     }
-
                     /*
                     void display_p(item){
                         Statement s = connection.executeQuery("SELECT Picture FROM Product WHERE ProductName ="+item);
@@ -273,10 +325,10 @@ public class Myprogram {
             });
 
     	
-            ImageIcon iconA = new ImageIcon("C:/Users/wyina/Downloads/egg salad.jpg");
-            ImageIcon iconB = new ImageIcon("C:/Users/wyina/Downloads/salmon balls (1).jpg");
-            ImageIcon iconC = new ImageIcon("C:/Users/wyina/Downloads/Dynamite-Cheese-Sticks-2-1200x900 (1).jpg");
-            ImageIcon iconD = new ImageIcon("C:/Users/wyina/Downloads/rellenong-hipon1 (1).jpg");
+            ImageIcon iconA = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/egg salad.jpg");
+            ImageIcon iconB = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/salmon balls (1).jpg");
+            ImageIcon iconC = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Dynamite-Cheese-Sticks-2-1200x900 (1).jpg");
+            ImageIcon iconD = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/rellenong-hipon1 (1).jpg");
             
             JButton Appetizer1 = new JButton(" ", iconA);
             Appetizer1.addActionListener(new ActionListener(){
@@ -315,10 +367,10 @@ public class Myprogram {
                     itemPrice.setText("Price: " + price + " php");}
                 });
             
-            ImageIcon iconE = new ImageIcon("C:/Users/wyina/Downloads/beefsteak.jpg");
-            ImageIcon iconF = new ImageIcon("C:/Users/wyina/Downloads/whole-chicken_cooked (1).jpg");
-            ImageIcon iconG = new ImageIcon("C:/Users/wyina/Downloads/lutong-pinoy-bulalo-1200x900 (1).jpg");
-            ImageIcon iconH = new ImageIcon("C:/Users/wyina/Downloads/cb987cf56e9f1240460a65ef8dd125f1 (1).jpg");
+            ImageIcon iconE = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/beefsteak.jpg");
+            ImageIcon iconF = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/whole-chicken_cooked (1).jpg");
+            ImageIcon iconG = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/lutong-pinoy-bulalo-1200x900 (1).jpg");
+            ImageIcon iconH = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/cb987cf56e9f1240460a65ef8dd125f1 (1).jpg");
 
             JButton Meal1 = new JButton(" ", iconE);
             Meal1.addActionListener(new ActionListener(){
@@ -359,10 +411,10 @@ public class Myprogram {
                     itemPrice.setText("Price: " + price+ " php");}
                 });
 
-            ImageIcon iconI = new ImageIcon("C:/Users/wyina/Downloads/Spaghetti-with-Meat-Sauce-Recipe-Video (1).jpg");
-            ImageIcon iconJ = new ImageIcon("C:/Users/wyina/Downloads/Goat-cheese-pesto-linguine-pasta (1).jpg");
-            ImageIcon iconK = new ImageIcon("C:/Users/wyina/Downloads/French_Fries (1).jpg");
-            ImageIcon iconL = new ImageIcon("C:/Users/wyina/Downloads/gp4k2jro_burgers_625x300_20_June_22 (1).jpg");
+            ImageIcon iconI = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Spaghetti-with-Meat-Sauce-Recipe-Video (1).jpg");
+            ImageIcon iconJ = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Goat-cheese-pesto-linguine-pasta (1).jpg");
+            ImageIcon iconK = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/French_Fries (1).jpg");
+            ImageIcon iconL = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/gp4k2jro_burgers_625x300_20_June_22 (1).jpg");
 
             JButton SideDish1 = new JButton(" ", iconI);
             SideDish1.addActionListener(new ActionListener(){
@@ -405,10 +457,10 @@ public class Myprogram {
                 });
             
 
-            ImageIcon iconM = new ImageIcon("C:/Users/wyina/Downloads/cakeb (1).jpg");
-            ImageIcon iconN = new ImageIcon("C:/Users/wyina/Downloads/chocolate-cupcakes- (1).jpg");
-            ImageIcon iconO = new ImageIcon("C:/Users/wyina/Downloads/Chocolate-Ice-Cream_0 (1).jpg");
-            ImageIcon iconP = new ImageIcon("C:/Users/wyina/Downloads/cookies6 (1).jpg");
+            ImageIcon iconM = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/cakeb (1).jpg");
+            ImageIcon iconN = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/chocolate-cupcakes- (1).jpg");
+            ImageIcon iconO = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Chocolate-Ice-Cream_0 (1).jpg");
+            ImageIcon iconP = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/cookies6 (1).jpg");
 
             JButton Dessert1 = new JButton(" ", iconM);
             Dessert1.addActionListener(new ActionListener(){
@@ -451,17 +503,17 @@ public class Myprogram {
                 });
 
 
-            ImageIcon iconQ = new ImageIcon("C:/Users/wyina/Downloads/beer (1).jpg");
-            ImageIcon iconR = new ImageIcon("C:/Users/wyina/Downloads/coffee (1).jpg");
-            ImageIcon iconS = new ImageIcon("C:/Users/wyina/Downloads/cokes (1).jpg");
-            ImageIcon iconT = new ImageIcon("C:/Users/wyina/Downloads/frappe (1).jpg");
+            ImageIcon iconQ = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/beer (1).jpg");
+            ImageIcon iconR = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/coffee (1).jpg");
+            ImageIcon iconS = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/cokes (1).jpg");
+            ImageIcon iconT = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/frappe (1).jpg");
 
             JButton Drinks1 = new JButton(" ", iconQ);
             Drinks1.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     value = food_array[16];
                     price = price_array[16];
-                    id = product_id[16];
+                    id = product_id[16]; 
                     itemName.setText("Item: " + value);
                     itemPrice.setText("Price: " + price+ " php");}
                 });
@@ -496,16 +548,13 @@ public class Myprogram {
                     itemPrice.setText("Price: " + price+ " php");}
                 });
             
-
-            
-
             JPanel UpperPanel = new JPanel();
-            UpperPanel.setBackground(Color.CYAN);
+            UpperPanel.setBackground(back);
             UpperPanel.setPreferredSize(new Dimension(100,175));
 
 
             JPanel LowerPanel = new JPanel();
-            LowerPanel.setBackground(Color.CYAN);
+            LowerPanel.setBackground(back);
             LowerPanel.setPreferredSize(new Dimension(100,100));
 
             JPanel CenterPanel = new JPanel();
