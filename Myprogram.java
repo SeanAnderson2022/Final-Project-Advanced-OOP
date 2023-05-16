@@ -1,13 +1,15 @@
+package src;
+import Order.Order;
+import ReceiptWindow.ReceiptWindow;
+
 import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Myprogram {
-        // temp list for menu
         public static String value = "";
         public static int price = 0;
         public static int id = 0;
@@ -35,14 +37,42 @@ public class Myprogram {
                 return -1;	
         }
         
-        // for qty
-        public static ArrayList<Integer> quantity_order = new ArrayList<Integer>();
-        // for order eme
-        public static ArrayList<String> food_order = new ArrayList<String>();
-        public static ArrayList<Integer> total_price_order = new ArrayList<Integer>();
-        public static ArrayList<Integer> food_id = new ArrayList<Integer>();
         public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
         public static int customer_number;
+        
+        /*public static void delete_current_order(int customer_number){
+            try{
+                Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+                Connection connection = DriverManager.getConnection(databaseURL);
+                //System.out.println("Connected to MS Access database");
+                Statement pst = connection.createStatement();
+                ResultSet rs = pst.executeQuery("SELECT Product.Stock, Product.ConsumedStocks, PurchaseOrder.Quantity, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+customer_number+";");
+                while(rs.next()){
+                    int remaining_stock = rs.getInt("Stock");
+                    System.out.print("Rem:" + remaining_stock);
+                    int id = rs.getInt("ProductID");
+                    int qty = rs.getInt("Quantity");
+                    System.out.print("QTY:" + qty);
+                    int consumed_stock = rs.getInt("ConsumedStocks");
+                    System.out.print("Cons Stock " + consumed_stock);
+                    int prev_consumed_stock = consumed_stock - qty;
+                    System.out.print("Prev: " + prev_consumed_stock);
+                    int stock = remaining_stock + qty;
+                    System.out.print("legit stocks: " + stock);
+                    PreparedStatement sql3 = connection.prepareStatement("UPDATE Product SET Stock = "+stock+", ConsumedStocks = "+prev_consumed_stock+" WHERE ProductID = "+id+";");
+                    sql3.executeUpdate();
+                }
+                PreparedStatement sql = connection.prepareStatement("DELETE FROM PurchaseOrder WHERE CustomerID ="+customer_number+";");
+                sql.execute();
+                connection.close();
+
+            } catch(SQLException error){
+                error.printStackTrace();
+            } catch(ClassNotFoundException error){
+                error.printStackTrace();
+            }
+        }*/
+        
         public static void get_rows(){
             String sql = "SELECT COUNT(*) AS CustomerID FROM Customer";
             int rowCount;
@@ -68,10 +98,13 @@ public class Myprogram {
             }
         }                
 	public Myprogram(){
-            food_order.clear();
-            quantity_order.clear();
-            total_price_order.clear();
+            JFrame frame = new JFrame("Myprogram");
+            value = "";
+            price = 0;
             get_rows();
+            Order menu = new Order();
+            menu.clean();
+            menu.setCurrent_customer_no(customer_number);
             
             JLabel logo = new JLabel(); //JLabel Creation
             logo.setIcon(new ImageIcon("C:/Users/wyina/Downloads/logo.jpg")); //Sets the image to be displayed as an icon
@@ -108,7 +141,6 @@ public class Myprogram {
             Color back = new Color(174, 230, 230);
             Color center_background = new Color(255, 255, 255);
             Color back_button_color = new Color(230, 230, 230);
-
             
             JPanel FoodPanel1 = new JPanel();
             FoodPanel1.setLayout(new GridLayout(2,2,20,20));
@@ -252,7 +284,6 @@ public class Myprogram {
                         FoodPanel3.setVisible(false);
                         FoodPanel4.setVisible(false);
                         FoodPanel5.setVisible(true);
-
                 }
             });
             SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0,0,100,1);
@@ -285,10 +316,10 @@ public class Myprogram {
                 public void actionPerformed(ActionEvent e) {
                     int selectedValue = (int) AmountSpinner.getValue();
                     if (selectedValue > 0) {
-                        food_order.add(value);
-                        food_id.add(id);
-                        quantity_order.add(selectedValue);
-                        total_price_order.add(selectedValue *price);}
+                        menu.get_food_order().add(value);
+                        menu.get_food_id().add(id);
+                        menu.get_quantity_order().add(selectedValue);
+                        menu.get_total_price_order().add(selectedValue *price);}
                         PayOrder.setEnabled(true);
                 }
             });
@@ -303,24 +334,42 @@ public class Myprogram {
                         PreparedStatement sql = connection.prepareStatement("INSERT INTO Customer(CustomerID) VALUES("+customer_number+")");
                         sql.executeUpdate();
                         int current = customer_number;
-                        int length = food_order.size();
-    
+                        int length = menu.get_food_order().size();
+                        
                         for(int i = 0; i < length; i++){
                             PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
-                                +"("+current+", "+food_id.get(i)+", "+quantity_order.get(i)+", "+total_price_order.get(i)+")");
+                                +"("+current+", "+menu.get_food_id().get(i)+", "+menu.get_quantity_order().get(i)+", "+menu.get_total_price_order().get(i)+")");
                             sql2.executeUpdate();
                         }
+                        
+                        
+                        Statement pst = connection.createStatement();
+                        ResultSet rs = pst.executeQuery("SELECT Product.Stock, PurchaseOrder.Quantity, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+current+";");
+                        
+                        while(rs.next()){
+                            int stock = rs.getInt("Stock");
+                            System.out.println(stock);
+                            
+                            int id = rs.getInt("ProductID");
+                            
+                            int consumed_stock = rs.getInt("Quantity");
+                            System.out.println(consumed_stock);
+                            
+                            int remaining_stock = stock - consumed_stock;
+                            System.out.println(remaining_stock);
+                            
+                            PreparedStatement sql3 = connection.prepareStatement("UPDATE Product SET Stock = "+remaining_stock+", ConsumedStocks = "+consumed_stock+" WHERE ProductID = "+id+";");
+                            sql3.executeUpdate();
+                        }
+                        sql.close();
                         connection.close();
                     } catch(SQLException err){
                         err.printStackTrace();
                     } catch(ClassNotFoundException err){
                         err.printStackTrace();
                     }
-                    /*
-                    void display_p(item){
-                        Statement s = connection.executeQuery("SELECT Picture FROM Product WHERE ProductName ="+item);
-                    }*/
-                    new ReceiptWindow();
+                    frame.dispose(); 
+                    ReceiptWindow receipt = new ReceiptWindow();
                 }
             });
 
@@ -561,7 +610,7 @@ public class Myprogram {
             CenterPanel.setBackground(Color.WHITE);
             CenterPanel.setPreferredSize(new Dimension(100,100));
 
-            JFrame frame = new JFrame("Myprogram");
+            
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setSize(1550, 1000);
