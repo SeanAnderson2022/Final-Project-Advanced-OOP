@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Collections;
 
 public class AdminPage {
     public static void clear_purchase_history(){
@@ -108,7 +109,6 @@ public class AdminPage {
                     Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                     Connection connection = DriverManager.getConnection(databaseURL);
                     System.out.println("Connected to DB");
-                    //query ni purchase order table with 'productname' nung id nung food which came from a separate table
                     String extract1 = "SELECT PurchaseOrder.OrderID, PurchaseOrder.CustomerID, PurchaseOrder.Quantity, PurchaseOrder.Total, Product.ProductName FROM PurchaseOrder, Product WHERE PurchaseOrder.ProductID = Product.ProductID";
                     
                     //for column headers
@@ -124,13 +124,15 @@ public class AdminPage {
                     while(rs.next()){
                         data[0] = rs.getInt("OrderID");
                         data[1] = rs.getInt("CustomerID");
-                        //data[2] = rs.getInt("ProductID");
                         data[2] = rs.getString("ProductName");
                         data[3] = rs.getInt("Quantity");
                         data[4] = rs.getInt("Total");
                         dtm.addRow(data);
                     }
                     JTable history_table = new JTable(dtm);
+                    
+                    //Collections.reverse();
+                    
                     HistoryPanel.add(new JScrollPane(history_table), BorderLayout.NORTH);
                     HistoryPanel.add(clear_history, BorderLayout.SOUTH);
                     rs.close();
@@ -206,7 +208,7 @@ public class AdminPage {
                     String query = "SELECT * FROM Product";
                     
                     //for column headers
-                    String[] col = {"ID", "Item Name", "Total Profit"};
+                    String[] col = {"ID", "Item Name", "Profit"};
               
                     
                     Statement pst = connection.createStatement();
@@ -227,6 +229,10 @@ public class AdminPage {
                     }
                     JTable profit_table = new JTable(dtm);
                     ProfitPanel.add(new JScrollPane(profit_table));
+                    JLabel final_profit = new JLabel("TOTAL PROFIT: " + total_profit + " php");
+                    final_profit.setBounds(700, 700, 200, 50);
+                    final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 19));
+                    ProfitPanel.add(final_profit);
                     rs.close();
                     pst.close();
                 } catch(SQLException error){
@@ -236,6 +242,8 @@ public class AdminPage {
                 }
             }
         });
+        
+        
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
