@@ -1,18 +1,19 @@
 package src;
 import Order.Order;
 import ReceiptWindow.ReceiptWindow;
-
 import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
 
 public class Myprogram {
         public static String value = "";
         public static int price = 0;
         public static int id = 0;
+        public static int food_check = 0;
         public static String[] food_array = {"Egg Salad", "Salmon Balls", "Dynamite Cheese", "Tempura", 
                                             "Beef Steak", "Whole Chicken", "Bulalo", "Fish",
                                             "Spaghetti", "Pesto", "French Fries", "Burger",
@@ -25,45 +26,49 @@ public class Myprogram {
                                           40, 50, 25, 65};
         public static int[] product_id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
                                        11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-        static int search(String[] food_array, String value){	
-                int i;
-                for (i = 0; i < 8; i++)
-                {
-                        if (food_array[i].equals(value))
-                        {
-                                return i;
-                        }
-                }
-                return -1;	
+        static int search(ArrayList<String> food_order, String value){	
+            int i;
+            for (i = 0; i <food_order.size(); i++)
+            {
+                    if (food_order.get(i).equals(value))
+                    {
+                            return i;
+                    }
+            }
+            return -1;	
         }
         
         public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
         public static int customer_number;
         
-        /*public static void delete_current_order(int customer_number){
+        public static void delete_current_order(int customer_number){
             try{
                 Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                 Connection connection = DriverManager.getConnection(databaseURL);
                 //System.out.println("Connected to MS Access database");
-                Statement pst = connection.createStatement();
-                ResultSet rs = pst.executeQuery("SELECT Product.Stock, Product.ConsumedStocks, PurchaseOrder.Quantity, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+customer_number+";");
-                while(rs.next()){
-                    int remaining_stock = rs.getInt("Stock");
-                    System.out.print("Rem:" + remaining_stock);
-                    int id = rs.getInt("ProductID");
-                    int qty = rs.getInt("Quantity");
-                    System.out.print("QTY:" + qty);
-                    int consumed_stock = rs.getInt("ConsumedStocks");
-                    System.out.print("Cons Stock " + consumed_stock);
-                    int prev_consumed_stock = consumed_stock - qty;
-                    System.out.print("Prev: " + prev_consumed_stock);
+                Statement query = connection.createStatement();
+                ResultSet resultset = query.executeQuery("SELECT Product.Stock, Product.ConsumedStocks, PurchaseOrder.Quantity, PurchaseOrder.CustomerID, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+customer_number+";");
+                
+                while(resultset.next()){
+                    int remaining_stock = resultset.getInt("Stock");
+                    System.out.print("Remaining stock: " + remaining_stock);
+                    int id = resultset.getInt("ProductID");
+                    int qty = resultset.getInt("Quantity");
+                    System.out.print("QTY: " + qty);
                     int stock = remaining_stock + qty;
-                    System.out.print("legit stocks: " + stock);
-                    PreparedStatement sql3 = connection.prepareStatement("UPDATE Product SET Stock = "+stock+", ConsumedStocks = "+prev_consumed_stock+" WHERE ProductID = "+id+";");
-                    sql3.executeUpdate();
+                    int consumed_stock = resultset.getInt("ConsumedStocks");
+                    System.out.print("Cons Stock: " + consumed_stock);
+                    int new_val_con_stock = consumed_stock - qty;
+                    System.out.print("new stock valu: " + new_val_con_stock);
+                    PreparedStatement sql = connection.prepareStatement("UPDATE Product SET Stock = "+stock+", ConsumedStocks = "+new_val_con_stock+" WHERE ProductID = "+id+";");
+                    sql.executeUpdate();
+                    sql.close();
                 }
-                PreparedStatement sql = connection.prepareStatement("DELETE FROM PurchaseOrder WHERE CustomerID ="+customer_number+";");
-                sql.execute();
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM PurchaseOrder WHERE CustomerID ="+customer_number+";");
+                stmt.execute();
+                stmt.close();
+                resultset.close();
+                query.close();
                 connection.close();
 
             } catch(SQLException error){
@@ -71,7 +76,7 @@ public class Myprogram {
             } catch(ClassNotFoundException error){
                 error.printStackTrace();
             }
-        }*/
+        }
         
         public static void get_rows(){
             String sql = "SELECT COUNT(*) AS CustomerID FROM Customer";
@@ -107,13 +112,13 @@ public class Myprogram {
             menu.setCurrent_customer_no(customer_number);
             
             JLabel logo = new JLabel(); //JLabel Creation
-            logo.setIcon(new ImageIcon("C:/Users/wyina/Downloads/logo.jpg")); //Sets the image to be displayed as an icon
-            logo.setSize(50, 50);
-            logo.setBounds(10, 25, 74, 50); //Sets the location of the image
+            logo.setIcon(new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/logo.png")); //Sets the image to be displayed as an icon
+            logo.setSize(40, 40);
+            logo.setBounds(10, 10, 40, 40); //Sets the location of the image
             
             JLabel restaurantName = new JLabel();// create restaurant name text
             restaurantName.setText("ROUTE 66");
-            restaurantName.setBounds(5, 0 , 500, 25);
+            restaurantName.setBounds(1400, 0 , 500, 25);
             restaurantName.setFont(new Font("Verdana", Font.BOLD, 25));
             
             JLabel itemName = new JLabel();
@@ -315,14 +320,30 @@ public class Myprogram {
             AddOrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     int selectedValue = (int) AmountSpinner.getValue();
+                    int selectedValue1;
+                    AmountSpinner.setValue(((SpinnerNumberModel) AmountSpinner.getModel()).getMinimum());
                     if (selectedValue > 0) {
+                        
+                        PayOrder.setEnabled(true);
+                        //for each loop then use id for base
+                        food_check = search(menu.get_food_order(),value);
+                        if (food_check == -1)
+                        {
                         menu.get_food_order().add(value);
                         menu.get_food_id().add(id);
                         menu.get_quantity_order().add(selectedValue);
-                        menu.get_total_price_order().add(selectedValue *price);}
-                        PayOrder.setEnabled(true);
-                }
-            });
+                        menu.get_total_price_order().add(selectedValue *price);
+                        }
+                        else
+                        {
+                            selectedValue1 = menu.get_quantity_order().get(food_check) + selectedValue;
+                            menu.get_quantity_order().set(food_check, selectedValue1);
+                            menu.get_total_price_order().set(food_check, selectedValue1 * price);
+                        }
+                        }
+                        
+                    }
+                });
     	
             PayOrder.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
@@ -348,20 +369,21 @@ public class Myprogram {
                         
                         while(rs.next()){
                             int stock = rs.getInt("Stock");
-                            System.out.println(stock);
+                            //System.out.println(stock);
                             
                             int id = rs.getInt("ProductID");
                             
                             int consumed_stock = rs.getInt("Quantity");
-                            System.out.println(consumed_stock);
+                            //System.out.println(consumed_stock);
                             
                             int remaining_stock = stock - consumed_stock;
-                            System.out.println(remaining_stock);
+                            //System.out.println(remaining_stock);
                             
                             PreparedStatement sql3 = connection.prepareStatement("UPDATE Product SET Stock = "+remaining_stock+", ConsumedStocks = "+consumed_stock+" WHERE ProductID = "+id+";");
                             sql3.executeUpdate();
                         }
                         sql.close();
+                        rs.close();
                         connection.close();
                     } catch(SQLException err){
                         err.printStackTrace();
@@ -373,11 +395,14 @@ public class Myprogram {
                 }
             });
 
-    	
+            ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/ROUTE-66-(2).png");
+            //iconLogo.setBounds(10, 10, 40, 40);
+            frame.setIconImage(iconLogo.getImage());
             ImageIcon iconA = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/egg salad.jpg");
             ImageIcon iconB = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/salmon balls (1).jpg");
             ImageIcon iconC = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Dynamite-Cheese-Sticks-2-1200x900 (1).jpg");
             ImageIcon iconD = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/rellenong-hipon1 (1).jpg");
+            
             
             JButton Appetizer1 = new JButton(" ", iconA);
             Appetizer1.addActionListener(new ActionListener(){
