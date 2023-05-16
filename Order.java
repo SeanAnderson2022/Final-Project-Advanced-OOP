@@ -53,8 +53,4 @@ public class Order {
     public static void setCurrent_customer_no(int current_customer_no) {
         Order.current_customer_no = current_customer_no;
     }
-    public static void fix_duplicate(){
-        
-    }
-
 }
