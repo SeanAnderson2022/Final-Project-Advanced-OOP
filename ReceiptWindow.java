@@ -88,10 +88,11 @@ public class ReceiptWindow{
         void_order.setBorder(BorderFactory.createEtchedBorder());
         void_order.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                
-                //int cno = menu.getCurrent_customer_no();
-                //System.out.println(cno);
-                //Myprogram.delete_current_order(cno);
+                int cno = menu.getCurrent_customer_no();
+                System.out.println("Current: " + cno);
+                Myprogram.delete_current_order(cno);
+                frame.dispose();
+                new Myprogram();
             }
         });
         
