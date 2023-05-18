@@ -9,7 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 
-public class Myprogram {
+public class CustomerOrder {
         public static String value = "";
         public static int price = 0;
         public static int id = 0;
@@ -103,7 +103,7 @@ public class Myprogram {
                 err.printStackTrace();
             }
         }                
-	public Myprogram(){
+	public CustomerOrder(){
             JFrame frame = new JFrame("ROUTE 66");
             value = "";
             price = 0;
