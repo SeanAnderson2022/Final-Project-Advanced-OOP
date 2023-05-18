@@ -1,6 +1,6 @@
 package ReceiptWindow;
 import Order.Order;
-import src.Myprogram;
+import src.CustomerOrder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -65,7 +65,6 @@ public class ReceiptWindow{
         table.getTableHeader().setFont(new Font("Lucida Sans Unicode", Font.BOLD, 18));
         table.getTableHeader().setForeground(Color.BLACK);
         table.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
-        //table.getTableHeader().setBorder
         JScrollPane receipt = new JScrollPane(table);
         receipt.getViewport().setBackground(Color.WHITE);
         receipt.setBorder(BorderFactory.createEmptyBorder());
@@ -96,7 +95,7 @@ public class ReceiptWindow{
         NextOrderButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new Myprogram();
+                new CustomerOrder();
             }
         });
         
@@ -113,43 +112,20 @@ public class ReceiptWindow{
             }
         });
 
-        /*
-        JPanel RightPanel = new JPanel();
-        RightPanel.setPreferredSize(new Dimension(520,100));
-
-        JPanel LeftPanel = new JPanel();
-        LeftPanel.setPreferredSize(new Dimension(520,100));
-*/
         Color color = new Color(95,196,203);
-        /*
-        JPanel UpperPanel = new JPanel();
-        UpperPanel.setPreferredSize(new Dimension(100,150 ));
-
-        JPanel LowerPanel = new JPanel();
-        LowerPanel.setPreferredSize(new Dimension(100,100));
-        */
-                // Create a custom JPanel for drawing the background image
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(1550, 1000);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
-        // Add other components to the custom panel or perform any desired customizations
-        // Set the custom panel as the content pane of the JFrame
         frame.setContentPane(panel);
         frame.add(CustomerLabel);
         frame.add(NextOrderButton);
         frame.add(ExitButton);
-        
-        //frame.add(void_order);
-        //frame.add(RightPanel, BorderLayout.EAST);
-        //frame.add(LeftPanel, BorderLayout.WEST);
-        //frame.add(U/pperPanel, BorderLayout.NORTH);
+
         frame.add(CenterPanel);
-        //frame.add(LowerPanel, BorderLayout.SOUTH);
-        //CenterPanel.add(receipt);
-        //frame.add(second_receipt);
-        //second_receipt.add(total_amount);
+
     }
 }
+
