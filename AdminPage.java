@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.Collections;
+//import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.*;
 
@@ -28,13 +28,15 @@ public class AdminPage {
             error.printStackTrace();
         }
     }
+    
     public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
+
     AdminPage(){
-        JFrame frame = new JFrame("Myprogram");
+        JFrame frame = new JFrame("ROUTE 66 (Admin View)");
         
         JLabel label = new JLabel();// create restaurant name text
     	label.setText("ADMINISTRATOR VIEW");
-    	label.setBounds(500, 10 , 600,100);
+    	label.setBounds(550, 10 , 600,100);
     	label.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 40));
         
         JLabel logo = new JLabel(); //JLabel Creation
@@ -44,7 +46,10 @@ public class AdminPage {
         imageIcon = new ImageIcon(newimg);  // transform it back
         logo.setIcon(imageIcon);
         logo.setBounds(30, 25, 65, 65); //Sets the location of the image
-
+        ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
+        //iconLogo.setBounds(10, 10, 40, 40);
+        frame.setIconImage(iconLogo.getImage());
+        
         JLabel restaurantName = new JLabel();// create restaurant name text
         restaurantName.setText("ROUTE 66");
         restaurantName.setBounds(110,45 , 500, 20);
@@ -111,13 +116,13 @@ public class AdminPage {
     	SalePanel.setBounds(470, 160, 1000, 560);
         SalePanel.setVisible(false);
         SalePanel.setLayout(null);
-        
+
         JPanel ProfitPanel = new JPanel();
     	ProfitPanel.setBackground(content_panel);
     	ProfitPanel.setBounds(470, 160, 1000, 560);
         ProfitPanel.setVisible(false);
         ProfitPanel.setLayout(null);
-        
+
         clear_history.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 clear_purchase_history();
@@ -199,7 +204,7 @@ public class AdminPage {
                     
                     table_display.getViewport().setBackground(content_panel);
                     table_display.setBorder(BorderFactory.createEmptyBorder());
-                    table_display.setBounds(50, 20, 800, 450);
+                    table_display.setBounds(50, 20, 800, 440);
                     HistoryPanel.add(table_display);
                     
 
@@ -310,25 +315,31 @@ public class AdminPage {
                     System.out.println("Connected to DB");
                     //query ni purchase order table with 'productname' nung id nung food which came from a separate table
                     String query = "SELECT * FROM Product";
-                    
+                    String get_sum_query = "SELECT SUM(Stock) AS total_profit_query FROM Product";
                     //for column headers
+                    int sum_query = 0;
+                    
                     String[] col = {"ID", "Item Name", "Profit"};
-              
+                    
                     
                     Statement pst = connection.createStatement();
                     ResultSet rs = pst.executeQuery(query);
                     
+                    Statement sum = connection.createStatement();
+                    ResultSet total_profit = sum.executeQuery(get_sum_query);
+                    
+                   
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
                     Object[] data = new Object[col.length];
-                    int total_profit = 0;
+                    
                     while(rs.next()){
                         data[0] = rs.getInt("ProductID");
                         data[1] = rs.getString("ProductName");
                         int price = rs.getInt("Price");
                         int consumed_stocks = rs.getInt("ConsumedStocks");
                         int total_per_item = price*consumed_stocks;
-                        total_profit += total_per_item;
-                        data[2] = total_per_item;
+                        
+                        data[2] = total_per_item + " php";
                         dtm.addRow(data);
                     }
                     JTable profit_table = new JTable(dtm);
@@ -354,14 +365,22 @@ public class AdminPage {
                     
                     table_display.getViewport().setBackground(content_panel);
                     table_display.setBorder(BorderFactory.createEmptyBorder());
-                    table_display.setBounds(50, 20, 900, 400);
+                    table_display.setBounds(50, 40, 900, 400);
                     ProfitPanel.add(table_display);
                     
-                    JLabel final_profit = new JLabel("TOTAL PROFIT: " + total_profit + " php");
-                    final_profit.setBounds(700, 700, 200, 50);
-                    final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 19));
+                    
+                    while (total_profit.next()) {
+                        int c = total_profit.getInt(1);
+                        sum_query = sum_query + c;
+                    }
+                    
+                    JLabel final_profit = new JLabel("TOTAL PROFIT: " + sum_query + " php");
+                    final_profit.setBounds(600, 470, 400, 50);
+                    final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 25));
                     ProfitPanel.add(final_profit);
-                
+                    
+                    total_profit.close();
+                    sum.close();
                     rs.close();
                     pst.close();
                 } catch(SQLException error){
