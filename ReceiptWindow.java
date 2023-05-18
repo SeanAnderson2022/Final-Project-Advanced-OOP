@@ -11,8 +11,10 @@ import javax.swing.table.*;
 public class ReceiptWindow{
     public ReceiptWindow(){
         Order menu = new Order();
-        JFrame frame = new JFrame("Myprogram");
-        
+        JFrame frame = new JFrame("Receipt");
+        ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
+        //iconLogo.setBounds(10, 10, 40, 40);
+        frame.setIconImage(iconLogo.getImage());
         JPanel panel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 // Load the background image
@@ -55,7 +57,7 @@ public class ReceiptWindow{
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
         table.getColumnModel().getColumn(2).setPreferredWidth(20);
         table.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
-        table.setRowHeight(25);
+        table.setRowHeight(35);
         table.setBackground(Color.WHITE);
         table.setForeground(Color.BLACK);
         table.setFont(new Font("Lucidas Sans Unicode", Font.PLAIN, 17));
@@ -151,19 +153,3 @@ public class ReceiptWindow{
         //second_receipt.add(total_amount);
     }
 }
-
- /*
-        JButton void_order = new JButton("CANCEL ORDER");
-        void_order.setBounds(950, 710, 170, 55);
-        void_order.setBackground(orange_button);
-        void_order.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 15));
-        void_order.setBorder(BorderFactory.createEtchedBorder());
-        void_order.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                int cno = menu.getCurrent_customer_no();
-                System.out.println("Current: " + cno);
-                Myprogram.delete_current_order(cno);
-                frame.dispose();
-                new Myprogram();
-            }
-        });*/
