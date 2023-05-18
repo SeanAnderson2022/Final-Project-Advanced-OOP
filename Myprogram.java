@@ -104,7 +104,7 @@ public class Myprogram {
             }
         }                
 	public Myprogram(){
-            JFrame frame = new JFrame("Myprogram");
+            JFrame frame = new JFrame("ROUTE 66");
             value = "";
             price = 0;
             get_rows();
@@ -329,7 +329,7 @@ public class Myprogram {
             int new_size = 20;
             AmountSpinner.setFont(font.deriveFont(Font.PLAIN, new_size));
                     
-            ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/ROUTE-66-(2).png");
+            ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
             //iconLogo.setBounds(10, 10, 40, 40);
             frame.setIconImage(iconLogo.getImage());
             ImageIcon iconA = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/egg salad.jpg");
