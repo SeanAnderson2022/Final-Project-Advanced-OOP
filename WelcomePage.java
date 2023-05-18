@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package src;
 
 import javax.swing.*;
@@ -15,7 +18,6 @@ public class WelcomePage {
         
         frame.pack();
         ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
-        //iconLogo.setBounds(10, 10, 40, 40);
         frame.setIconImage(iconLogo.getImage());
         
         JLabel logo = new JLabel(); //JLabel Creation
@@ -24,7 +26,6 @@ public class WelcomePage {
         Image newimg = image.getScaledInstance(290, 290,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         imageIcon = new ImageIcon(newimg);  // transform it back
         logo.setIcon(imageIcon);
-        //logo.getScaledInstance(60, 60, ImageIcon.SCALE_DEFAULT);
         logo.setBounds(620, 40, 300, 300); //Sets the location of the image
 
         JLabel label = new JLabel();// create restaurant name text
@@ -47,7 +48,7 @@ public class WelcomePage {
         OrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new Myprogram();
+                new CustomerOrder();
             }
         });
 
