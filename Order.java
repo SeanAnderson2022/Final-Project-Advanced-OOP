@@ -8,6 +8,7 @@ public class Order {
     private static ArrayList<String> food_order = new ArrayList<String>();
     private static ArrayList<Integer> total_price_order = new ArrayList<Integer>();
     private static ArrayList<Integer> food_id = new ArrayList<Integer>();
+    private static ArrayList<Integer> stock_list = new ArrayList<>();
     
     public ArrayList<Integer> get_quantity_order(){
             return quantity_order;
@@ -46,6 +47,15 @@ public class Order {
         return total;
     }
 
+    public static ArrayList<Integer> getStock_list() {
+        return stock_list;
+    }
+
+    public static void setStock_list(ArrayList<Integer> stock_list) {
+        Order.stock_list = stock_list;
+    }
+    
+    
     public static int getCurrent_customer_no() {
         return current_customer_no;
     }
