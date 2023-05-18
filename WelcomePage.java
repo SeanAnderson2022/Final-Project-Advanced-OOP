@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package src;
 
 import javax.swing.*;
@@ -17,6 +14,9 @@ public class WelcomePage {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         frame.pack();
+        ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
+        //iconLogo.setBounds(10, 10, 40, 40);
+        frame.setIconImage(iconLogo.getImage());
         
         JLabel logo = new JLabel(); //JLabel Creation
         ImageIcon imageIcon = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png"); // load the image to a imageIcon
@@ -42,7 +42,7 @@ public class WelcomePage {
         OrderButton.setBorder(BorderFactory.createEtchedBorder());
         //OrderButton.setContentAreaFilled(false);
         OrderButton.setFocusPainted(false);
-        OrderButton.setBorderPainted(false);
+        //OrderButton.setBorderPainted(false);
         OrderButton.setFont(new Font("Verdana", Font.PLAIN, 20));
         OrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
