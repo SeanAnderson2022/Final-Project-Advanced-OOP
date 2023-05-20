@@ -9,16 +9,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.*;
 
 public class AdminPage {
-    // function to delete all purchase records in database
+    public static String databaseURL = "jdbc:ucanaccess://C:/Users/wyina/OneDrive/Documents/NetBeansProjects/JavaApplication1/database.accdb;memory=false";
+
+    // function to delete all purchase records in PurchaseOrder table
     public static void clear_purchase_history(){
         try{
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             Connection connection = DriverManager.getConnection(databaseURL);
-            //System.out.println("Connected to MS Access database");
             Statement pst = connection.createStatement();
             pst.execute("DELETE FROM PurchaseOrder;");
-            //pst.executeUpdate("ALTER TABLE PurchaseOrder ALTER COLUMN OrderID Counter(1,1);");
-            //pst.execute("ALTER TABLE PurchaseOrder ALTER COLUMN OrderID AUTOINCREMENT;");
             connection.close();
         } catch(SQLException error){
             error.printStackTrace();
@@ -26,11 +25,14 @@ public class AdminPage {
             error.printStackTrace();
         }
     }
-    
-    public static String databaseURL = "jdbc:ucanaccess://C:/Users/wyina/OneDrive/Documents/NetBeansProjects/JavaApplication1/database.accdb;memory=false";
 
     AdminPage(){
         JFrame frame = new JFrame("ROUTE 66 (Admin View)");
+        
+        Color unselected_button = new Color(230, 230, 230);
+        Color content_panel = new Color(251, 246, 240);
+        Color orange_button = new Color(255, 220, 175);
+        Color color = new Color(174, 230, 230);
         
         JLabel label = new JLabel();// create restaurant name text
     	label.setText("ADMINISTRATOR VIEW");
@@ -45,18 +47,13 @@ public class AdminPage {
         logo.setIcon(imageIcon);
         logo.setBounds(30, 25, 65, 65); //Sets the location of the image
         ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
-        //iconLogo.setBounds(10, 10, 40, 40);
         frame.setIconImage(iconLogo.getImage());
         
         JLabel restaurantName = new JLabel();// create restaurant name text
         restaurantName.setText("ROUTE 66");
         restaurantName.setBounds(110,45 , 500, 20);
         restaurantName.setFont(new Font("Verdana", Font.BOLD, 25));
-            
-        Color unselected_button = new Color(230, 230, 230);
-        Color content_panel = new Color(251, 246, 240);
-        Color orange_button = new Color(255, 220, 175);
-        
+  
         JButton HistoryButton = new JButton("HISTORY ORDER");
     	HistoryButton.setBounds(0, 130, 400,100);
     	HistoryButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 20));
@@ -71,7 +68,6 @@ public class AdminPage {
         saleStockButton.setBackground(unselected_button);
         saleStockButton.setBorder(BorderFactory.createEtchedBorder());
         saleStockButton.setBorderPainted(false);
-        saleStockButton.setBorder(BorderFactory.createEtchedBorder());
         saleStockButton.setFocusPainted(false);
         
         JButton ProfitInformatiionButton = new JButton("PROFIT INFORMATION");
@@ -79,10 +75,8 @@ public class AdminPage {
     	ProfitInformatiionButton.setBorder(BorderFactory.createEtchedBorder());
         ProfitInformatiionButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 20));
         ProfitInformatiionButton.setBackground(unselected_button);
-        ProfitInformatiionButton.setBorder(BorderFactory.createEtchedBorder());
         ProfitInformatiionButton.setFocusPainted(false);
         ProfitInformatiionButton.setBorderPainted(false);
-        
         
         JButton clear_history = new JButton("CLEAR PURCHASE HISTORY");
         clear_history.setBounds(600, 480, 340,50);
@@ -90,8 +84,7 @@ public class AdminPage {
         clear_history.setBackground(orange_button);
         clear_history.setBorder(BorderFactory.createEtchedBorder());
         clear_history.setFocusPainted(false);
-        
-        Color color = new Color(174, 230, 230);
+
         JPanel UpperPanel = new JPanel();
     	UpperPanel.setBackground(color);
     	UpperPanel.setBounds(0, 0, 1700, 130);
@@ -137,7 +130,6 @@ public class AdminPage {
             }
         });
 
-        
         //for indentation of cells 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -186,8 +178,6 @@ public class AdminPage {
                     //it will create JTable with dtm data
                     JTable history_table = new JTable(dtm);
                     
-                    //Collections.reverse();
-                    
                     history_table.getColumnModel().getColumn(0).setPreferredWidth(100);
                     history_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
                     history_table.getColumnModel().getColumn(1).setPreferredWidth(170);
@@ -208,9 +198,7 @@ public class AdminPage {
                     history_table.getTableHeader().setFont(new Font("Lucida Sans Unicode", Font.BOLD, 22));
                     history_table.getTableHeader().setForeground(Color.BLACK);
                     history_table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.black));
-                    
-                    
-                    
+
                     JScrollPane table_display = new JScrollPane(history_table);
                     
                     table_display.getViewport().setBackground(content_panel);
@@ -218,7 +206,6 @@ public class AdminPage {
                     table_display.setBounds(50, 20, 800, 440);
                     HistoryPanel.add(table_display);
                     
-
                     rs.close();
                     pst.close();
                 } catch(SQLException error){
@@ -229,7 +216,7 @@ public class AdminPage {
             
             }
         });
-             //Action listener for saleStockButton, it will display JTable consisting stock information from database
+        //Action listener for saleStockButton, it will display JTable consisting stock information from database
         saleStockButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 //adjust color codes of buttons
@@ -272,13 +259,13 @@ public class AdminPage {
                     sales_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
                     sales_table.getColumnModel().getColumn(1).setPreferredWidth(450);
                     sales_table.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
-                    
                     sales_table.getColumnModel().getColumn(2).setPreferredWidth(250);
                     sales_table.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
                     sales_table.getColumnModel().getColumn(3).setPreferredWidth(400);
                     sales_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
                     sales_table.getColumnModel().getColumn(4).setPreferredWidth(400);
                     sales_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+                    
                     sales_table.setRowHeight(40);
                     sales_table.setBackground(Color.WHITE);
                     sales_table.setForeground(Color.BLACK);
@@ -288,8 +275,7 @@ public class AdminPage {
                     sales_table.getTableHeader().setFont(new Font("Lucida Sans Unicode", Font.BOLD, 18));
                     sales_table.getTableHeader().setForeground(Color.BLACK);
                     sales_table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.black));
-                    
-                   
+
                     JScrollPane table_display = new JScrollPane(sales_table);
                     
                     table_display.getViewport().setBackground(content_panel);
@@ -308,7 +294,7 @@ public class AdminPage {
             }
         });
 
-         //Action listener for ProfitInformation, it will display JTable consisting all profit informations from database
+        //Action listener for ProfitInformation, it will display JTable consisting all profit informations from database
         ProfitInformatiionButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 //adjust color codes of buttons
@@ -320,30 +306,21 @@ public class AdminPage {
                 ProfitPanel.setVisible(true);
                 ProfitPanel.removeAll();
                         
-                
                 try{
                     Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                     Connection connection = DriverManager.getConnection(databaseURL);
                     System.out.println("Connected to DB");
-                    //query ni purchase order table with 'productname' nung id nung food which came from a separate table
                     String query = "SELECT * FROM Product";
-                    //String get_sum_query = "SELECT SUM(Stock * ConsumedStocks) AS total_profit_query FROM Product";
-                    //for column headers
                     int sum_query = 0;
                     
                     String[] col = {"ID", "Item Name", "Profit"};
-                    
-                    
+
                     Statement pst = connection.createStatement();
                     ResultSet rs = pst.executeQuery(query);
-                    
-                    //Statement sum = connection.createStatement();
-                    //ResultSet total_profit = sum.executeQuery(get_sum_query);
-                    
                    
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
                     Object[] data = new Object[col.length];
-                    // this loop will get data from database and store it in dtm that will be use for JTable
+                    
                     while(rs.next()){
                         data[0] = rs.getInt("ProductID");
                         data[1] = rs.getString("ProductName");
@@ -387,10 +364,6 @@ public class AdminPage {
                     table_display.setBounds(50, 40, 900, 400);
                     ProfitPanel.add(table_display);
 
-
-                    
-                    //total_profit.close();
-                    //sum.close();
                     rs.close();
                     pst.close();
                 } catch(SQLException error){
@@ -400,8 +373,6 @@ public class AdminPage {
                 }
             }
         });
-        
-        
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -422,9 +393,8 @@ public class AdminPage {
         frame.add(SalePanel);
         frame.add(ProfitPanel);
         frame.add(CenterPanel);
-        
-        
     }
+    
     public static void main(String[] args) { 	
     	new AdminPage();
     } 
