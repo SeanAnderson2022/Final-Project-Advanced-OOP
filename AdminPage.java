@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.*;
 
 public class AdminPage {
+    // function to delete all purchase records in database
     public static void clear_purchase_history(){
         try{
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
@@ -26,7 +27,7 @@ public class AdminPage {
         }
     }
     
-    public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
+    public static String databaseURL = "jdbc:ucanaccess://C:/Users/wyina/OneDrive/Documents/NetBeansProjects/JavaApplication1/database.accdb;memory=false";
 
     AdminPage(){
         JFrame frame = new JFrame("ROUTE 66 (Admin View)");
@@ -82,6 +83,7 @@ public class AdminPage {
         ProfitInformatiionButton.setFocusPainted(false);
         ProfitInformatiionButton.setBorderPainted(false);
         
+        
         JButton clear_history = new JButton("CLEAR PURCHASE HISTORY");
         clear_history.setBounds(600, 480, 340,50);
         clear_history.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 18));
@@ -120,6 +122,7 @@ public class AdminPage {
         ProfitPanel.setVisible(false);
         ProfitPanel.setLayout(null);
 
+        //action listener for clear_history button, it will run the function "clear_purchase_history"
         clear_history.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 int a = JOptionPane.showConfirmDialog(frame, "All purchase order records will be deleted. Proceed?",
@@ -143,6 +146,7 @@ public class AdminPage {
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
                     
+        //Action listener for HistoryButton, it will display JTable consisting all history orders from database
         HistoryButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 // this will hide very panels excepy for history panel
@@ -170,7 +174,7 @@ public class AdminPage {
                     
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
                     Object[] data = new Object[col.length];
-                    
+                    // this loop will get data from database and store it in dtm that will be use for JTable
                     while(rs.next()){
                         data[0] = rs.getInt("OrderID");
                         data[1] = rs.getInt("CustomerID");
@@ -179,6 +183,7 @@ public class AdminPage {
                         data[4] = rs.getInt("Total") + " php";
                         dtm.addRow(data);
                     }
+                    //it will create JTable with dtm data
                     JTable history_table = new JTable(dtm);
                     
                     //Collections.reverse();
@@ -204,6 +209,8 @@ public class AdminPage {
                     history_table.getTableHeader().setForeground(Color.BLACK);
                     history_table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.black));
                     
+                    
+                    
                     JScrollPane table_display = new JScrollPane(history_table);
                     
                     table_display.getViewport().setBackground(content_panel);
@@ -222,7 +229,7 @@ public class AdminPage {
             
             }
         });
-
+             //Action listener for saleStockButton, it will display JTable consisting stock information from database
         saleStockButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 //adjust color codes of buttons
@@ -249,7 +256,7 @@ public class AdminPage {
                     
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
                     Object[] data = new Object[col.length];
-                    
+                    // this loop will get data from database and store it in dtm that will be use for JTable
                     while(rs.next()){
                         data[0] = rs.getInt("ProductID");
                         data[1] = rs.getString("ProductName");
@@ -258,6 +265,7 @@ public class AdminPage {
                         data[4] = rs.getInt("ConsumedStocks");
                         dtm.addRow(data);
                     }
+                    //it will create JTable with dtm data
                     JTable sales_table = new JTable(dtm);
                     
                     sales_table.getColumnModel().getColumn(0).setPreferredWidth(250);
@@ -300,7 +308,7 @@ public class AdminPage {
             }
         });
 
-        
+         //Action listener for ProfitInformation, it will display JTable consisting all profit informations from database
         ProfitInformatiionButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 //adjust color codes of buttons
@@ -335,7 +343,7 @@ public class AdminPage {
                    
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
                     Object[] data = new Object[col.length];
-                    
+                    // this loop will get data from database and store it in dtm that will be use for JTable
                     while(rs.next()){
                         data[0] = rs.getInt("ProductID");
                         data[1] = rs.getString("ProductName");
@@ -352,6 +360,7 @@ public class AdminPage {
                     final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 25));
                     ProfitPanel.add(final_profit);
                     
+                    //it will create JTable with dtm data
                     JTable profit_table = new JTable(dtm);
                     profit_table.getColumnModel().getColumn(0).setPreferredWidth(250);
                     profit_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -420,4 +429,3 @@ public class AdminPage {
     	new AdminPage();
     } 
 }
-
