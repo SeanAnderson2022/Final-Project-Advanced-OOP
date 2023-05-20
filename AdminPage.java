@@ -1,13 +1,10 @@
 package adminpage;
-//import History.History;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-//import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.*;
 
@@ -125,11 +122,18 @@ public class AdminPage {
 
         clear_history.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                clear_purchase_history();
-                frame.dispose();
-                new AdminPage();
+                int a = JOptionPane.showConfirmDialog(frame, "All purchase order records will be deleted. Proceed?",
+                    "Confirm", JOptionPane.OK_CANCEL_OPTION);
+                if(a == JOptionPane.OK_OPTION){
+                    clear_purchase_history();
+                    frame.dispose();
+                    new AdminPage();                            
+                }
+                else if (a == JOptionPane.CANCEL_OPTION)
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             }
         });
+
         
         //for indentation of cells 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -315,7 +319,7 @@ public class AdminPage {
                     System.out.println("Connected to DB");
                     //query ni purchase order table with 'productname' nung id nung food which came from a separate table
                     String query = "SELECT * FROM Product";
-                    String get_sum_query = "SELECT SUM(Stock) AS total_profit_query FROM Product";
+                    //String get_sum_query = "SELECT SUM(Stock * ConsumedStocks) AS total_profit_query FROM Product";
                     //for column headers
                     int sum_query = 0;
                     
@@ -325,8 +329,8 @@ public class AdminPage {
                     Statement pst = connection.createStatement();
                     ResultSet rs = pst.executeQuery(query);
                     
-                    Statement sum = connection.createStatement();
-                    ResultSet total_profit = sum.executeQuery(get_sum_query);
+                    //Statement sum = connection.createStatement();
+                    //ResultSet total_profit = sum.executeQuery(get_sum_query);
                     
                    
                     DefaultTableModel dtm = new DefaultTableModel(col, 0);
@@ -338,10 +342,16 @@ public class AdminPage {
                         int price = rs.getInt("Price");
                         int consumed_stocks = rs.getInt("ConsumedStocks");
                         int total_per_item = price*consumed_stocks;
-                        
+                        sum_query += total_per_item;
                         data[2] = total_per_item + " php";
                         dtm.addRow(data);
                     }
+                    
+                    JLabel final_profit = new JLabel("TOTAL PROFIT: " + sum_query + " php");
+                    final_profit.setBounds(600, 470, 400, 50);
+                    final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 25));
+                    ProfitPanel.add(final_profit);
+                    
                     JTable profit_table = new JTable(dtm);
                     profit_table.getColumnModel().getColumn(0).setPreferredWidth(250);
                     profit_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
@@ -367,20 +377,11 @@ public class AdminPage {
                     table_display.setBorder(BorderFactory.createEmptyBorder());
                     table_display.setBounds(50, 40, 900, 400);
                     ProfitPanel.add(table_display);
+
+
                     
-                    
-                    while (total_profit.next()) {
-                        int c = total_profit.getInt(1);
-                        sum_query = sum_query + c;
-                    }
-                    
-                    JLabel final_profit = new JLabel("TOTAL PROFIT: " + sum_query + " php");
-                    final_profit.setBounds(600, 470, 400, 50);
-                    final_profit.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 25));
-                    ProfitPanel.add(final_profit);
-                    
-                    total_profit.close();
-                    sum.close();
+                    //total_profit.close();
+                    //sum.close();
                     rs.close();
                     pst.close();
                 } catch(SQLException error){
