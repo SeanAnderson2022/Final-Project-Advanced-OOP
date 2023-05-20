@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package src;
 
 import javax.swing.*;
@@ -41,9 +37,7 @@ public class WelcomePage {
         OrderButton.setBackground(color);
         OrderButton.setBounds(650, 500, 240,75);
         OrderButton.setBorder(BorderFactory.createEtchedBorder());
-        //OrderButton.setContentAreaFilled(false);
         OrderButton.setFocusPainted(false);
-        //OrderButton.setBorderPainted(false);
         OrderButton.setFont(new Font("Verdana", Font.PLAIN, 20));
         OrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
@@ -61,7 +55,7 @@ public class WelcomePage {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
             }
         };
-        // Set the layout manager to null for absolute positioning
+        // for absolute positioning
         panel.setLayout(null);
         
         // Set the size and position of the custom panel
