@@ -15,18 +15,25 @@ public class CustomerOrder {
         public static int id = 0;
         public static int item_stock = 0;
         public static int food_check = 0;
+        public static int customer_number;
+        
+	//arrays containing the corresponding data from Product table
         public static String[] food_array = {"Egg Salad", "Salmon Balls", "Dynamite Cheese", "Tempura", 
                                             "Beef Steak", "Whole Chicken", "Bulalo", "Fish",
                                             "Spaghetti", "Pesto", "French Fries", "Burger",
                                             "Cake", "Cupcake", "Ice Cream", "Cookies",
                                             "Beer", "Coffee", "Soda", "Frappe"};
+        
         public static int[] price_array = {60, 50, 30, 80,
                                           150, 260, 350, 120,
                                           70, 115, 60, 90,
                                           60, 45, 60, 50,
                                           40, 50, 25, 65};
+        
         public static int[] product_id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
                                        11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        
+        //used for keeping the arraylist from item order duplicates
         static int search(ArrayList<String> food_order, String value){	
             int i;
             for (i = 0; i <food_order.size(); i++)
@@ -38,47 +45,10 @@ public class CustomerOrder {
             }
             return -1;	
         }
-        
+        //using ucanaccess driver to connect accdb file with java
         public static String databaseURL = "jdbc:ucanaccess://C:/Users/emman/OneDrive/Desktop/sample_2/database.accdb;memory=false";
-        public static int customer_number;
         
-        public static void delete_current_order(int customer_number){
-            try{
-                Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-                Connection connection = DriverManager.getConnection(databaseURL);
-                //System.out.println("Connected to MS Access database");
-                Statement query = connection.createStatement();
-                ResultSet resultset = query.executeQuery("SELECT Product.Stock, Product.ConsumedStocks, PurchaseOrder.Quantity, PurchaseOrder.CustomerID, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+customer_number+";");
-                
-                while(resultset.next()){
-                    int remaining_stock = resultset.getInt("Stock");
-                    System.out.print("Remaining stock: " + remaining_stock);
-                    int id = resultset.getInt("ProductID");
-                    int qty = resultset.getInt("Quantity");
-                    System.out.print("QTY: " + qty);
-                    int stock = remaining_stock + qty;
-                    int consumed_stock = resultset.getInt("ConsumedStocks");
-                    System.out.print("Cons Stock: " + consumed_stock);
-                    int new_val_con_stock = consumed_stock - qty;
-                    System.out.print("new stock valu: " + new_val_con_stock);
-                    PreparedStatement sql = connection.prepareStatement("UPDATE Product SET Stock = "+stock+", ConsumedStocks = "+new_val_con_stock+" WHERE ProductID = "+id+";");
-                    sql.executeUpdate();
-                    sql.close();
-                }
-                PreparedStatement stmt = connection.prepareStatement("DELETE FROM PurchaseOrder WHERE CustomerID ="+customer_number+";");
-                stmt.execute();
-                stmt.close();
-                resultset.close();
-                query.close();
-                connection.close();
-
-            } catch(SQLException error){
-                error.printStackTrace();
-            } catch(ClassNotFoundException error){
-                error.printStackTrace();
-            }
-        }
-        
+        //store the number of rows of customer table into customer_number variable
         public static void get_rows(){
             String sql = "SELECT COUNT(*) AS CustomerID FROM Customer";
             int rowCount;
@@ -93,7 +63,7 @@ public class CustomerOrder {
                     rowCount = rs.getInt("CustomerID");
                     customer_number = rowCount + 1;
                 }
-                // Close the resources
+                // close the resources
                 rs.close();
                 pst.close();
                 connection.close();
@@ -102,20 +72,30 @@ public class CustomerOrder {
             } catch(ClassNotFoundException err){
                 err.printStackTrace();
             }
-        }                
+        }
+        
 	public CustomerOrder(){
+            
             JFrame frame = new JFrame("ROUTE 66");
+                    
+            ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
+            frame.setIconImage(iconLogo.getImage());
+            
+            //resets the var value when constructors are called
             value = "";
             price = 0;
+            
             get_rows();
+            
+            //instance of class Order to access private ArrayLists which are temporary storage for current order data
             Order menu = new Order();
             menu.clean();
             menu.setCurrent_customer_no(customer_number);
             
+            //store the 'Stock' field data into arraylist
             try{
                 Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                 Connection connection = DriverManager.getConnection(databaseURL);
-                //System.out.println("Connected to MS Access database");
                 Statement query = connection.createStatement();
                 ResultSet resultset = query.executeQuery("SELECT Stock FROM Product;");
                 
@@ -134,14 +114,16 @@ public class CustomerOrder {
                 error.printStackTrace();
             }
             
-            JLabel logo = new JLabel(); //JLabel Creation
-            ImageIcon imageIcon = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png"); // load the image to a imageIcon
-            Image image = imageIcon.getImage(); // transform it 
-            Image newimg = image.getScaledInstance(60, 60,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-            imageIcon = new ImageIcon(newimg);  // transform it back
+            //set icon by transforming into image to scale down the size
+            JLabel logo = new JLabel(); 
+            ImageIcon imageIcon = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
+            Image image = imageIcon.getImage();
+            Image newimg = image.getScaledInstance(60, 60,  java.awt.Image.SCALE_SMOOTH);
+            imageIcon = new ImageIcon(newimg);
             logo.setIcon(imageIcon);
-            logo.setBounds(30, 10, 65, 65); //Sets the location of the image
+            logo.setBounds(30, 10, 65, 65);
             
+            //set labels for customer order window
             JLabel restaurantName = new JLabel();// create restaurant name text
             restaurantName.setText("ROUTE 66");
             restaurantName.setBounds(110,29 , 500, 20);
@@ -166,12 +148,16 @@ public class CustomerOrder {
             QuantityLabel.setText("QUANTITY");
             QuantityLabel.setBounds(990, 700 , 500,100);
             QuantityLabel.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 18));
-
-            // coloring shit
+            
+            //color scheme
+            
             Color food_padding = new Color(251, 246, 240);
             Color back = new Color(174, 230, 230);
             Color center_background = new Color(255, 255, 255);
             Color back_button_color = new Color(230, 230, 230);
+            Color orange_button = new Color(255, 220, 175);
+            
+            //panels for menu layout
             
             JPanel FoodPanel1 = new JPanel();
             FoodPanel1.setLayout(new GridLayout(2,2,20,20));
@@ -207,6 +193,8 @@ public class CustomerOrder {
             FoodPanel5.setPreferredSize(new Dimension(1000,500));
             FoodPanel5.setVisible(false);
     	
+            // buttons for menu categories: Appetizer, Meal, Side Dish, Dessert, Drinks
+            
             JButton AppetizerButton = new JButton("APPETIZER");
             AppetizerButton.setBounds(50, 115, 240,60);
             AppetizerButton.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 18));
@@ -246,6 +234,8 @@ public class CustomerOrder {
             DrinksButton.setBorder(BorderFactory.createEtchedBorder());
             DrinksButton.setBorder(BorderFactory.createEmptyBorder());
             DrinksButton.setFocusPainted(false);
+            
+            //set menu category button functionalities
             
             AppetizerButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
@@ -322,16 +312,23 @@ public class CustomerOrder {
                         FoodPanel5.setVisible(true);
                 }
             });
+            
+            // JSpinner for selecting food quantity
             SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0,0,item_stock,1);
             JSpinner AmountSpinner = new JSpinner(spinnerModel);
             AmountSpinner.setBounds(1100,720,100,55);
             Font font = AmountSpinner.getFont();
             int new_size = 20;
             AmountSpinner.setFont(font.deriveFont(Font.PLAIN, new_size));
-                    
-            ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
-            //iconLogo.setBounds(10, 10, 40, 40);
-            frame.setIconImage(iconLogo.getImage());
+            
+            /*
+            
+            - setting buttons for menu items
+            - each button performs getting stock_data which will be the basis for the range of spinner
+            - stores the certain food item and its attributes into value, price, id, and item_stock variables
+              which will be inserted into arraylists once order is added
+            
+            */
             ImageIcon iconA = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/egg salad.jpg");
             ImageIcon iconB = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/salmon balls (1).jpg");
             ImageIcon iconC = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/food_menu/Dynamite-Cheese-Sticks-2-1200x900 (1).jpg");
@@ -698,9 +695,7 @@ public class CustomerOrder {
                     itemPrice.setText("Price: " + price+ " php");}
                 });
             
-            
-            
-            Color orange_button = new Color(255, 220, 175);
+            // buttons for adding order and confirming/pay order
             
             JButton AddOrderButton = new JButton("ADD ORDER");
             AddOrderButton.setBounds(1210, 720, 130,55);
@@ -719,20 +714,24 @@ public class CustomerOrder {
             AmountSpinner.addChangeListener(new ChangeListener() {      
                 @Override
                 public void stateChanged(ChangeEvent e) {
-                  
+                  //add order button will be enabled once the user changes the spinner from 0 quantity
                   AddOrderButton.setEnabled(true);
                 }
             });
             
+            //add order gets the input or order details from user including the quantity value from spinner and stores into arrayLists
             AddOrderButton.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     int selectedValue = (int) AmountSpinner.getValue();
                     int selectedValue1;
                     AmountSpinner.setValue(((SpinnerNumberModel) AmountSpinner.getModel()).getMinimum());
+                    
+                    // using search method to check same item name in the arraylist 
+                    //to avoid duplicates when a user orders the same food/item more than once
+                    
                     if (selectedValue > 0) {
                         
                         PayOrder.setEnabled(true);
-                        //for each loop then use id for base
                         food_check = search(menu.get_food_order(),value);
                         if (food_check == -1)
                         {
@@ -751,41 +750,37 @@ public class CustomerOrder {
                         
                     }
                 });
-    	
+            
+            //payorder will store the order details into the database specifically in the PurchaseOrder table
+            //this will also update the remaining stocks and consumed stocks in the Product table
+            //this will also close the customer order window and opens the receipt window
             PayOrder.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     try {
                         Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
                         Connection connection = DriverManager.getConnection(databaseURL);
-                        System.out.println("Connected to MS Access database");
 
                         PreparedStatement sql = connection.prepareStatement("INSERT INTO Customer(CustomerID) VALUES("+customer_number+")");
                         sql.executeUpdate();
                         int current = customer_number;
                         int length = menu.get_food_order().size();
                         
+                        //for inserting order details
                         for(int i = 0; i < length; i++){
                             PreparedStatement sql2 = connection.prepareStatement("INSERT INTO PurchaseOrder(CustomerID, ProductID, Quantity, Total) VALUES "
                                 +"("+current+", "+menu.get_food_id().get(i)+", "+menu.get_quantity_order().get(i)+", "+menu.get_total_price_order().get(i)+")");
                             sql2.executeUpdate();
                         }
                         
-                        
                         Statement pst = connection.createStatement();
                         ResultSet rs = pst.executeQuery("SELECT Product.Stock, PurchaseOrder.Quantity, PurchaseOrder.ProductID FROM Product, PurchaseOrder WHERE CustomerID = "+current+";");
                         
+                        // for updating stocks
                         while(rs.next()){
                             int stock = rs.getInt("Stock");
-                            //System.out.println(stock);
-                            
                             int id = rs.getInt("ProductID");
-                            
                             int consumed_stock = rs.getInt("Quantity");
-                            //System.out.println(consumed_stock);
-                            
                             int remaining_stock = stock - consumed_stock;
-                            //System.out.println(remaining_stock);
-                            
                             PreparedStatement sql3 = connection.prepareStatement("UPDATE Product SET Stock = "+remaining_stock+", ConsumedStocks = "+consumed_stock+" WHERE ProductID = "+id+";");
                             sql3.executeUpdate();
                         }
@@ -802,6 +797,8 @@ public class CustomerOrder {
                 }
             });
             
+            // setting layout in the frame
+            
             JPanel UpperPanel = new JPanel();
             UpperPanel.setBackground(back);
             UpperPanel.setPreferredSize(new Dimension(100,175));
@@ -815,6 +812,7 @@ public class CustomerOrder {
             CenterPanel.setBackground(Color.WHITE);
             CenterPanel.setPreferredSize(new Dimension(100,100));
 
+            //adding components into the frame
             
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
