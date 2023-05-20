@@ -11,9 +11,12 @@ import javax.swing.table.*;
 public class ReceiptWindow{
     public ReceiptWindow(){
         Order menu = new Order();
+        
+        Color color = new Color(95,196,203);
+        Color orange_button = new Color(255, 220, 175);
+        
         JFrame frame = new JFrame("Receipt");
         ImageIcon iconLogo = new ImageIcon("C:/Users/emman/OneDrive/Desktop/sample_2/design_img/logo_final.png");
-        //iconLogo.setBounds(10, 10, 40, 40);
         frame.setIconImage(iconLogo.getImage());
         JPanel panel = new JPanel() {
             protected void paintComponent(Graphics g) {
@@ -74,7 +77,7 @@ public class ReceiptWindow{
         int total = menu.get_total_of_total_price();
         JLabel total_amount = new JLabel("TOTAL: " + total + " php");
         total_amount.setFont(new Font("Lucida Sans Unicode", Font.BOLD, 22));
-        total_amount.setBounds(400, 400, 200, 47);
+        total_amount.setBounds(400, 400, 400, 47);
         total_amount.setForeground(Color.BLACK);
         CenterPanel.add(total_amount);
 
@@ -83,12 +86,11 @@ public class ReceiptWindow{
         CustomerLabel.setBounds(550, 20 , 500,100);
         CustomerLabel.setFont(new Font("Verdana", Font.PLAIN, 40));
         
-        Color orange_button = new Color(255, 220, 175);
+
         
         JButton NextOrderButton = new JButton("NEXT CUSTOMER");
         NextOrderButton.setFont(new Font("Verdana", Font.PLAIN, 15));
         NextOrderButton.setBounds(770, 700, 200,55);
-        //NextOrderButton.setEnabled(false);
         NextOrderButton.setBackground(orange_button);
         NextOrderButton.setBorder(BorderFactory.createEtchedBorder());
         NextOrderButton.setFocusPainted(false);
@@ -112,20 +114,18 @@ public class ReceiptWindow{
             }
         });
 
-        Color color = new Color(95,196,203);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(1550, 1000);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
+        // Add components
         frame.setContentPane(panel);
         frame.add(CustomerLabel);
         frame.add(NextOrderButton);
         frame.add(ExitButton);
-
         frame.add(CenterPanel);
 
     }
 }
-
